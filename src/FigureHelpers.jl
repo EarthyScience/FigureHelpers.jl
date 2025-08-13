@@ -7,8 +7,10 @@ include("util.jl")
 
 include("makie_util.jl")
 export cm_per_inch, cm2inch, golden_ratio, MakieConfig
-export figure_conf, figure_conf_axis, save_with_config, ppt_MakieConfig, paper_MakieConfig
+export figure_conf, figure_conf_axis, save_with_config
+export ppt_MakieConfig, paper_MakieConfig, png_MakieConfig
 export hidexdecoration!, hideydecoration!, axis_contents
+export get_size_from_config, get_fontsize_from_config
 
 include("aog_util.jl")
 export set_default_AoGTheme!, draw_with_legend!

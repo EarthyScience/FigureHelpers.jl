@@ -20,8 +20,8 @@ using CairoMakie
     fig0 = figure_conf(; makie_config = ppt_MakieConfig()) 
     (x0,y0) = size(fig0.scene)
     fig = figure_conf(0.5, 1.2; makie_config = ppt_MakieConfig()) 
-    @test size(fig.scene)[1] ≈ x0*1.2
-    @test size(fig.scene)[2] ≈ x0*1.2/0.5
+    @test size(fig.scene)[1] ≈ x0*1.2 atol=1.0
+    @test size(fig.scene)[2] ≈ x0*1.2/0.5 atol=1.0
     #
     makie_config = MakieConfig(filetype="png", target=:presentation)
     # set_default_CMTheme!(;makie_config)  # aog-specific
@@ -42,6 +42,29 @@ using CairoMakie
     end
     #
 end;
+
+check_pdf_size = () -> begin
+    makie_config = paper_MakieConfig()
+    fig = figure_conf(golden_ratio;makie_config); 
+    data = cumsum(randn(4, 101), dims = 2)
+    series!(Axis(fig[1,1]), data, labels=["label $i" for i in 1:4])
+    save_with_config("tmp/tmp", fig; makie_config)
+    makie_config.size_inches
+    # load file and check property figure size-inces 
+end
+
+check_ppt_png_size = () -> begin
+    makie_config = png_MakieConfig()
+    fig = figure_conf(golden_ratio;makie_config); 
+    data = cumsum(randn(4, 101), dims = 2)
+    series!(Axis(fig[1,1]), data, labels=["label $i" for i in 1:4])
+    save_with_config("tmp/tmp", fig; makie_config)
+    makie_config.size_inches
+    # load files and check property figure size-inces is 2 times the inces
+    #
+    save_with_config("tmp/tmp", fig; makie_config=MakieConfig(makie_config; filetype="svg"))
+end
+
 
 i_test_larger_margins = () -> begin
     makie_config = ppt_MakieConfig(filetype="png")

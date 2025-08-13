@@ -25,15 +25,16 @@ properties such as figure sizes, fontsizes, and graphics format.
 The following class helps to collect them and provide them to functions below
 ```@docs
 MakieConfig
+paper_MakieConfig
 ```
 
-### creating figures with adjusted sizes and font-sizes
+### creating Makie Figures with adjusted sizes and font-sizes
 
 ```@docs
 figure_conf
 figure_conf_axis
 ```
-### saving figures to correct format and dpi-resolution
+### saving figures to correct format, subdirectory, and dpi-resolution
 
 ```@docs
 save_with_config
