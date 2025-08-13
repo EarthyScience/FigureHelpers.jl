@@ -35,7 +35,7 @@ Properties and defaults
 - `px_per_unit = 2.0`
 - `filetype = "svg"`
 - `fontsize = 9`   (point units)
-- `size_inches = cm2inch.((17.5,17.5/golden_ratio))` (witdth x height)
+- `size_inches = cm2inch.((17.5,17.5/golden_ratio))` (width x height)
 
 The default `px_per_unit` needs to rescale a png image in ppt to 50%, but
 this gives better quality.
@@ -46,7 +46,7 @@ this gives better quality.
     px_per_unit::FT           = 2.0  # Makie default is 2.0, but control here
     filetype::String          = "svg" 
     fontsize::IT              = 9
-    size_inches::Tuple{FT,FT} = cm2inch.((17.5,17.5/golden_ratio)) # BG-two-collumn
+    size_inches::Tuple{FT,FT} = cm2inch.((17.5,17.5/golden_ratio)) # BG-two-column
 end
 
 # function MakieConfig(cfg::MakieConfig; 
@@ -75,7 +75,7 @@ end
 
 
 #ppt_MakieConfig(;target = :presentation, pt_per_unit = 0.75/2, filetype = "png", fontsize=18, size_inches = cm2inch.((29,29/golden_ratio)), kwargs...) = MakieConfig(;target, pt_per_unit, filetype, fontsize, size_inches, kwargs...)
-# size so that orginal size covers half a wide landscape slide of 33cm
+# size so that original size covers half a wide landscape slide of 33cm
 # svg does not work properly with fonts in ppt/wps
 #ppt_MakieConfig(;target = :presentation, filetype = "png", fontsize=18, size_inches = cm2inch.((16,16/golden_ratio)), kwargs...) = MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
 # target of 10inch wide screen slide (16:10)
@@ -132,7 +132,7 @@ the default x-width.
 
 The last constructor sets the properties without referring to a config.
 It uses by default `pt_per_unit=0.75` to conform to png display and save. 
-Remember to devide fontsize and other sizes specified elsewhere by this factor.
+Remember to divide fontsize and other sizes specified elsewhere by this factor.
 See also [`cm2inch`](@ref) and `save`.
 """    
 function figure_conf end;

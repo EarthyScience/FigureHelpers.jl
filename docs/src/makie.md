@@ -10,7 +10,7 @@ The following function help to convert.
 cm2inch
 ```
 
-Figures often look well, if the ratio between length and hight corresponds
+Figures often look well, if the ratio between length and height corresponds
 to the [Golden ratio](https://en.wikipedia.org/wiki/Golden_ratio). 
 So we provide it here.
 

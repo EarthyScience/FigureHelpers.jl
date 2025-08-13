@@ -129,7 +129,7 @@ end
 """
 Histogram of several variables of a 3D array, i.e. MCMCChain.
 
-The desnity plot may give wrong impressions, if probability mass is concentrated
+The density plot may give wrong impressions, if probability mass is concentrated
 at the borders, which can be inspected by plotting histograms instead.
 """
 function CP.histogram_params(chns, pars=names(chns, :parameters); 
