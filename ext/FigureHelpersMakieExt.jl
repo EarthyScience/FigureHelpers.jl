@@ -15,13 +15,6 @@ function CP.figure_conf_axis(args...; makie_config::MakieConfig = MakieConfig(),
     fig, Axis(fig[1,1]; kwargs...)
 end
 
-function get_size_from_config(cfg)
-    72 .* cfg.size_inches ./ cfg.pt_per_unit # size_pt
-end
-function get_fontsize_from_config(cfg)
-    cfg.fontsize ./ cfg.pt_per_unit
-end
-
 function CP.figure_conf(; makie_config::MakieConfig = MakieConfig())
     size = get_size_from_config(makie_config)
     fontsize = get_fontsize_from_config(makie_config)
@@ -48,8 +41,9 @@ function CP.save_with_config(filename::AbstractString, fig::Union{Figure, Makie.
     filename_cfg = joinpath(dir,bname)
     mkpath(dir)
     #save(filename_cfg, fig, args...)
-    save(filename_cfg, fig, args...; pt_per_unit = makie_config.pt_per_unit)
-    filename_cfg
+    save(filename_cfg, fig, args...; 
+        pt_per_unit = makie_config.pt_per_unit, px_per_unit = makie_config.px_per_unit)
+    abspath(filename_cfg)
 end
 
 CP.hidexdecoration!(ax; label = false, ticklabels = false, ticks = false, grid = false, minorgrid = false, minorticks = false, kwargs...) = hidexdecorations!(ax; label, ticklabels, ticks, grid, minorgrid, minorticks, kwargs...)

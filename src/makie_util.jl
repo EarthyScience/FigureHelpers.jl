@@ -30,29 +30,23 @@ const golden_ratio = 1.618
 A collection of figure properties to tailor the same figure either
 for presentation in a paper or a presentation.
 
-    ppt_MakieConfig(;
-        target = :presentation, 
-        filetype = "png", 
-        fontsize=18, 
-        size_inches = (5.0,5.0/golden_ratio), 
-        kwargs...) 
-
-    paper_MakieConfig(;
-        size_inches = cm2inch.((8.3,8.3/golden_ratio)), 
-        kwargs...) 
-
 Properties and defaults
 - `pt_per_unit = 0.75`
-- `filetype = "png"`
+- `px_per_unit = 2.0`
+- `filetype = "svg"`
 - `fontsize = 9`   (point units)
 - `size_inches = cm2inch.((17.5,17.5/golden_ratio))` (witdth x height)
+
+The default `px_per_unit` needs to rescale a png image in ppt to 50%, but
+this gives better quality.
 """            
 @with_kw struct MakieConfig{FT,IT} 
-    target::Symbol            = :paper
-    pt_per_unit::FT           = 0.75   
-    filetype::String          = "png"
+    target::Symbol            = :tmp
+    pt_per_unit::FT           = 0.75 # Makie default  
+    px_per_unit::FT           = 2.0  # Makie default is 2.0, but control here
+    filetype::String          = "svg" 
     fontsize::IT              = 9
-    size_inches::Tuple{FT,FT} = cm2inch.((17.5,17.5/golden_ratio))
+    size_inches::Tuple{FT,FT} = cm2inch.((17.5,17.5/golden_ratio)) # BG-two-collumn
 end
 
 # function MakieConfig(cfg::MakieConfig; 
@@ -65,16 +59,63 @@ end
 #         MakieConfig(target, pt_per_unit, filetype, fontsize, size_inches)
 # end
 
+"""
+Get the size in pixel from Config, taking care of pt_per_unit and dpi of 
+"""
+function get_size_from_config(cfg; dpi=72)
+    dpi .* cfg.size_inches ./ cfg.pt_per_unit # size_pt for 72 dpi
+end
+
+function get_fontsize_from_config(cfg)
+    cfg.fontsize ./ cfg.pt_per_unit
+end
+
+
+
 
 
 #ppt_MakieConfig(;target = :presentation, pt_per_unit = 0.75/2, filetype = "png", fontsize=18, size_inches = cm2inch.((29,29/golden_ratio)), kwargs...) = MakieConfig(;target, pt_per_unit, filetype, fontsize, size_inches, kwargs...)
 # size so that orginal size covers half a wide landscape slide of 33cm
 # svg does not work properly with fonts in ppt/wps
 #ppt_MakieConfig(;target = :presentation, filetype = "png", fontsize=18, size_inches = cm2inch.((16,16/golden_ratio)), kwargs...) = MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
-# target of 10inch wide screen slide
-ppt_MakieConfig(;target = :presentation, filetype = "png", fontsize=18, size_inches = (5.0,5.0/golden_ratio), kwargs...) = MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
+# target of 10inch wide screen slide (16:10)
+#ppt_MakieConfig(;target = :presentation, filetype = "png", fontsize=18, size_inches = (5.0,5.0/golden_ratio), kwargs...) = MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
+# target of 13.3inch wide screen slide (16:9): wide screen
+"""
+    paper_MakieConfig(;
+        target = :paper, filetype = "pdf", 
+        fontsize=9, size_inches = cm2inch.((8.3,8.3/golden_ratio)), ...)    
+        
+    ppt_MakieConfig(;
+        target = :presentation, filetype = "svg", 
+        fontsize=18, size_inches = (6.65,6.65/golden_ratio), ...)
 
-paper_MakieConfig(;size_inches = cm2inch.((8.3,8.3/golden_ratio)), filetype = "pdf", kwargs...) = MakieConfig(;size_inches, filetype, kwargs...)
+    png_MakieConfig(;target = :png, filetype = "png", ...) 
+    
+Specialized configurations adapted to 
+- `paper_MakieConfig`: single column Biogeosciences paper (8.3cm)
+- `ppt_MakieConfig`: half of a wide-screen ppt presentation (13.3 inch), either svg or png
+  Inserting generated svg yields better quality than copy (=png) from VScode preview.
+- `png_MakieConfig`: same as ppt, but generating png images at 200% scale
+  By default, need to rescale the png to 50% when inserting into presentation.
+"""
+function paper_MakieConfig(;
+    target = :paper, filetype = "pdf", 
+    fontsize=9, size_inches = cm2inch.((8.3,8.3/golden_ratio)), 
+    kwargs...
+    ) 
+    MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
+end;
+function ppt_MakieConfig(;
+    target = :presentation, filetype = "svg", 
+    fontsize=18, size_inches = (6.65,6.65/golden_ratio), 
+    kwargs...
+    ) 
+    MakieConfig(;target, filetype, fontsize, size_inches, kwargs...)
+end;
+function png_MakieConfig(;target = :png, filetype = "png", kwargs...)
+    ppt_MakieConfig(;target, filetype)
+end
 
 """
     figure_conf(; makie_config)
@@ -110,7 +151,7 @@ function figure_conf_axis end;
 
 Save figure with file updated extension `cfg.filetype` to subdirectory `cfg.filetype`
 of given path of filename.
-Sets `pt_per_unit` to `makie_config.pt_per_unit`.
+Sets `pt_per_unit` and `px_per_unit` according to `makie_config`.
 """
 function save_with_config end   
 
