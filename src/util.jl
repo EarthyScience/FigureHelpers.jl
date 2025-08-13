@@ -1,5 +1,5 @@
 # used in Extensions to pass limimits
-"similar to passmissing, creates a function that retuns nothing, if any of its arguments is noting."
+"similar to passmissing, creates a function that returns nothing, if any of its arguments is noting."
 passnothing(f) = (xs...; kwargs...) -> any(isnothing, xs) ? nothing : f(xs...;kwargs...)
 
 # function _getindex_keep(ax::CA.AbstractAxis, syms::NTuple{N,Symbol}) where N
