@@ -29,7 +29,7 @@ KernelDensity = "0.6.10"
 MCMCChains = "6.0.7, 7"
 Makie = "0.21.13, 0.22 - 0.24"
 Parameters = "0.12.3"
-StatsBase = "0.34.5"
+StatsBase = "0.34.4"
 julia = "1.10"
 
 [workspace]
